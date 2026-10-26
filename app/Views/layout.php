@@ -14,7 +14,7 @@ $pageContent = ob_get_clean();
     <title><?= e($title) ?> · Fasilitas Kampus</title>
     <link rel="stylesheet" href="assets/css/app.css">
 </head>
-<body>
+<body class="role-<?= e($user['role'] ?? 'guest') ?>">
 <?php if (isset($user)): ?>
     <div class="app-shell">
         <aside class="sidebar">
@@ -30,6 +30,13 @@ $pageContent = ob_get_clean();
                 <a class="<?= $activePage === 'complaints' ? 'active' : '' ?>" href="index.php?page=complaints"><span>▤</span><?= $user['role'] === 'petugas' ? 'Tugas Saya' : ($user['role'] === 'admin' ? 'Semua Pengaduan' : 'Pengaduan Saya') ?></a>
                 <?php if ($user['role'] === 'admin'): ?>
                     <a class="<?= $activePage === 'staff' ? 'active' : '' ?>" href="index.php?page=staff"><span>♙</span> Data Petugas</a>
+                    <a class="<?= $activePage === 'students' ? 'active' : '' ?>" href="index.php?page=students"><span>♙</span> Data Mahasiswa</a>
+                    <a class="<?= $activePage === 'categories' ? 'active' : '' ?>" href="index.php?page=categories"><span>◇</span> Kategori</a>
+                    <a class="<?= $activePage === 'performance' ? 'active' : '' ?>" href="index.php?page=performance"><span>↗</span> Kinerja Petugas</a>
+                    <a href="index.php?page=export"><span>⇩</span> Ekspor CSV</a>
+                    <a href="index.php?page=report"><span>▧</span> Rekap PDF</a>
+                <?php elseif ($user['role'] === 'petugas'): ?>
+                    <a class="<?= $activePage === 'calendar' ? 'active' : '' ?>" href="index.php?page=calendar"><span>▦</span> Kalender Tugas</a>
                 <?php endif; ?>
             </nav>
             <div class="sidebar-bottom">

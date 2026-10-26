@@ -1,0 +1,6 @@
+<?php $title = 'Kinerja Petugas'; ?>
+<section class="page-heading"><p class="eyebrow">ANALISIS OPERASIONAL</p><h1>Kinerja Petugas</h1><p class="muted">Bandingkan jumlah tugas aktif dan penyelesaian berdasarkan tanggal penugasan.</p></section>
+<section class="panel">
+    <form method="get" class="filter-bar performance-filter"><input type="hidden" name="page" value="performance"><label for="from">Dari</label><input id="from" type="date" name="from" value="<?= e($from) ?>" required><label for="to">Sampai</label><input id="to" type="date" name="to" value="<?= e($to) ?>" required><button class="button button-primary" type="submit">Terapkan</button></form>
+    <?php if ($performance): ?><div class="table-wrap"><table><thead><tr><th>Petugas</th><th>Tugas pada periode</th><th>Selesai</th><th>Rata-rata waktu penanganan</th></tr></thead><tbody><?php foreach ($performance as $person): ?><tr><td><?= e($person['name']) ?></td><td><?= (int) $person['assigned'] ?></td><td><?= (int) ($person['completed'] ?? 0) ?></td><td><?= $person['average_hours'] === null ? '—' : e((string) $person['average_hours']) . ' jam' ?></td></tr><?php endforeach; ?></tbody></table></div><?php else: ?><div class="empty-state"><h3>Belum ada data petugas</h3><p class="muted">Tambahkan petugas dan berikan tugas untuk melihat kinerja.</p></div><?php endif; ?>
+</section>

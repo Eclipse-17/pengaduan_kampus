@@ -444,17 +444,18 @@ Prototipe aplikasi berjalan sudah tersedia di folder ini. Aplikasi menggunakan P
 
 1. Salin folder proyek ke komputer dan hidupkan layanan MySQL dari XAMPP.
 2. Buat database dengan mengimpor file `database/schema.sql` melalui phpMyAdmin. File tersebut membuat database `pengaduan_fasilitas` beserta tabel dan kategori awal.
-3. Pastikan kredensial MySQL sesuai konfigurasi bawaan aplikasi (`127.0.0.1`, port `3306`, user `root`, kata sandi kosong). Jika berbeda, atur environment variable `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, dan `DB_PASSWORD` sebelum menjalankan PHP.
-4. Dari folder proyek, jalankan `php database/seed.php` untuk membuat akun demo dan memastikan kategori tersedia.
-5. Jalankan server lokal dari folder proyek:
+3. Jika database lama sudah berisi data, cadangkan terlebih dahulu lalu jalankan `database/upgrade_features.sql` satu kali melalui phpMyAdmin. Migrasi menambah kolom dan tabel fitur serta memindahkan foto lama ke tabel foto baru. Jangan jalankan migrasi ini pada database baru yang sudah dibuat dari `schema.sql`.
+4. Pastikan kredensial MySQL sesuai konfigurasi bawaan aplikasi (`127.0.0.1`, port `3306`, user `root`, kata sandi kosong). Jika berbeda, atur environment variable `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, dan `DB_PASSWORD` sebelum menjalankan PHP.
+5. Dari folder proyek, jalankan `php database/seed.php` untuk membuat akun demo dan memastikan kategori tersedia.
+6. Jalankan server lokal dari folder proyek:
 
    ```powershell
    php -S 127.0.0.1:8000 -t public
    ```
 
-6. Buka `http://127.0.0.1:8000` di browser.
+7. Buka `http://127.0.0.1:8000` di browser.
 
-Pastikan `storage/uploads` dapat ditulisi oleh proses PHP. Foto disimpan di luar folder `public` dan hanya dapat dibaca oleh pengguna yang berhak atas laporan tersebut. Batas unggah foto 5 MB; sesuaikan `upload_max_filesize` dan `post_max_size` di `php.ini` bila diperlukan.
+Pastikan `storage/uploads` dapat ditulisi oleh proses PHP. Foto disimpan di luar folder `public` dan hanya dapat dibaca oleh pengguna yang berhak atas laporan tersebut. Maksimal 5 foto per tahap, masing-masing maksimal 5 MB; sesuaikan `upload_max_filesize=5M` dan `post_max_size=30M` di `php.ini` bila diperlukan.
 
 ## Akun demo lokal
 
@@ -491,3 +492,11 @@ Akun dan kata sandi ini hanya untuk demonstrasi lokal. Jangan gunakan kredensial
 ## Pengamanan dan aturan status
 
 Aplikasi memakai password hashing, regenerasi session saat login, CSRF token untuk seluruh form, prepared statements, escaping output, pembatasan akses berdasarkan peran dan kepemilikan/penugasan, serta validasi MIME dan ukuran foto. Riwayat status ditulis bersama perubahan status dalam transaksi database. Status bergerak dari `Menunggu` ke `Diproses`, lalu ke `Selesai`; hanya petugas yang sedang ditugaskan yang dapat mengonfirmasi penyelesaian. Laporan selesai tidak dapat diubah kembali.
+
+## Fitur tambahan per peran
+
+- **Mahasiswa:** memberi nilai 1–5 dan ulasan setelah laporan selesai, melampirkan hingga lima foto bukti, membatalkan laporan yang masih `Menunggu` (status `Dibatalkan` tetap tersimpan dalam riwayat), melihat grafik aktivitas 14 hari, dan mencetak detail laporan melalui dialog cetak browser untuk disimpan sebagai PDF.
+- **Petugas:** waktu mulai dicatat otomatis saat status berubah menjadi `Diproses`, waktu selesai dicatat saat status menjadi `Selesai`, mengunggah hingga lima foto hasil perbaikan, melihat kalender tenggat yang ditentukan admin, menandai tugas terhambat dengan alasan tanpa mengganti status `Diproses`, dan melihat ringkasan tugas/status serta grafik tren di dashboard.
+- **Admin:** mengelola akun petugas dan mahasiswa (membuat akun serta memperbarui nama, email, dan kata sandi), menetapkan prioritas dan tenggat saat menugaskan petugas, melihat grafik tren dan ringkasan status, mengunduh daftar laporan sebagai CSV, mencetak rekap untuk disimpan sebagai PDF, mengelola kategori (nonaktifkan kategori tanpa menghapus riwayat laporan), dan memfilter kinerja petugas berdasarkan rentang tanggal.
+
+Tabel `complaint_photos` menyimpan beberapa lampiran bukti dan foto hasil perbaikan; `complaint_ratings` menyimpan penilaian mahasiswa. Kolom pada `complaints` menyimpan prioritas, tenggat, waktu mulai/selesai, dan alasan hambatan; `categories.is_active` menyimpan status kategori. ENUM status juga mencakup `Dibatalkan`. Gunakan `schema.sql` untuk instalasi baru atau `upgrade_features.sql` satu kali untuk database lama.

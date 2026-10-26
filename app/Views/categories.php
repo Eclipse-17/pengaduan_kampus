@@ -1,0 +1,8 @@
+<?php $title = 'Kategori Fasilitas'; ?>
+<section class="page-heading"><p class="eyebrow">PENGELOLAAN DATA</p><h1>Kategori Fasilitas</h1><p class="muted">Kategori nonaktif tidak muncul pada formulir pengaduan baru; laporan lama tetap aman.</p></section>
+<section class="panel category-create"><div class="panel-heading"><div><h2>Tambah kategori</h2><p class="muted">Gunakan nama yang mudah dikenali mahasiswa.</p></div></div>
+    <form method="post" action="index.php" class="inline-form"><?= csrf_field() ?><input type="hidden" name="action" value="create_category"><label class="sr-only" for="category-name">Nama kategori</label><input id="category-name" name="name" maxlength="80" required placeholder="Contoh: Lift"><button class="button button-primary" type="submit">Tambah kategori</button></form>
+</section>
+<section class="panel"><div class="panel-heading"><div><h2>Daftar kategori</h2><p class="muted"><?= count($categories) ?> kategori</p></div></div>
+    <div class="category-list"><?php foreach ($categories as $category): ?><form method="post" action="index.php" class="category-row"><?= csrf_field() ?><input type="hidden" name="action" value="update_category"><input type="hidden" name="category_id" value="<?= (int) $category['id'] ?>"><label class="sr-only" for="category-<?= (int) $category['id'] ?>">Nama kategori</label><input id="category-<?= (int) $category['id'] ?>" name="name" maxlength="80" required value="<?= e($category['name']) ?>"><label class="category-active"><input type="checkbox" name="is_active" value="1" <?= (int) $category['is_active'] === 1 ? 'checked' : '' ?>> Aktif</label><button class="button button-outline" type="submit">Simpan</button></form><?php endforeach; ?></div>
+</section>

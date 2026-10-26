@@ -53,6 +53,7 @@ function status_class(string $status): string
         'Menunggu' => 'waiting',
         'Diproses' => 'processing',
         'Selesai' => 'done',
+        'Dibatalkan' => 'cancelled',
         default => 'neutral',
     };
 }
