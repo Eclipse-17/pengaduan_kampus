@@ -453,7 +453,7 @@ Prototipe aplikasi berjalan sudah tersedia di folder ini. Aplikasi menggunakan P
    php -S 127.0.0.1:8000 -t public
    ```
 
-7. Buka `http://127.0.0.1:8000` di browser.
+7. Buka `http://127.0.0.1:8000` di browser. Jika menggunakan Apache XAMPP dengan proyek di `htdocs/apl`, buka `http://localhost/apl/`; `.htaccess` proyek akan meneruskan permintaan ke folder `public` tanpa mengubah URL yang terlihat.
 
 Pastikan `storage/uploads` dapat ditulisi oleh proses PHP. Foto disimpan di luar folder `public` dan hanya dapat dibaca oleh pengguna yang berhak atas laporan tersebut. Maksimal 5 foto per tahap, masing-masing maksimal 5 MB; sesuaikan `upload_max_filesize=5M` dan `post_max_size=30M` di `php.ini` bila diperlukan.
 
